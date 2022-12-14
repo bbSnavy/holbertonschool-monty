@@ -20,6 +20,8 @@ u8	execute_line(u8 **line, u64 index, vector_t *stack)
 			return (execute_push(line, index, stack));
 		case OP_PALL:
 			return (execute_pall(line, index, stack));
+		case OP_PINT:
+			return (execute_pint(line, index, stack));
 		default:
 		{
 			print_error("L");

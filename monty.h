@@ -79,10 +79,12 @@ u8		*read_file(int f);
 u8		execute_opcode(u8 *);
 u8		execute_push(u8 **line, u64 index, vector_t *stack);
 u8		execute_pall(u8 **line, u64 index, vector_t *stack);
+u8		execute_pint(u8 **line, u64 index, vector_t *stack);
 int		main(int argc, char **argv);
 
 # define BUFFER_SIZE (1024)
 # define OP_PUSH (1)
 # define OP_PALL (2)
+# define OP_PINT (3)
 
 #endif

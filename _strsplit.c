@@ -131,12 +131,22 @@ u8	**_strsplit_special(u8 *str, u8 *lim)
 		r[x] = 0;
 	s = 0;
 	v = vector_new(0);
+	if (v == 0)
+	{
+		free_string_array(r);
+		return (0);
+	}
 	for (x = 0; str[x]; x++)
 	{
 		if (_strchr(lim, str[x]))
 		{
 			r[s++] = vector_consume(v);
 			v = vector_new(0);
+			if (v == 0)
+			{
+				free_string_array(r);
+				return (0);
+			}
 		}
 		else
 			vector_write(v, &str[x], 1);
