@@ -49,7 +49,7 @@ u8	execute_runtime(u8 **lines, vector_t *stack)
 
 	for (x = 0; lines[x]; x++)
 	{
-		v = _strsplit(lines[x], (u8 *) " ");
+		v = _strsplit(lines[x], (u8 *) " \t");
 		if (v == 0)
 		{
 			free_string_array(lines);
