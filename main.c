@@ -98,7 +98,7 @@ void	execute_process(char *file, vector_t *stack)
 		print_error("\n");
 		exit(EXIT_FAILURE);
 	}
-	v = _strsplit(s, (u8 *) "\n");
+	v = _strsplit_special(s, (u8 *) "\n");
 	if (v == 0)
 	{
 		free(s);

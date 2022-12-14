@@ -38,14 +38,14 @@ u8	execute_push(u8 **line, u64 index, vector_t *stack)
 		print_error("L");
 		print_error_n(index + 1);
 		print_error(": usage: push integer\n");
-		return (0);
+		return (2);
 	}
 	v = (i32) atoi((char *) line[1]);
 	stack = vector_write(stack, &v, sizeof(v));
 	if (stack == 0)
 	{
 		print_error("Error: malloc failed\n");
-		return (0);
+		return (2);
 	}
 	return (1);
 }

@@ -83,3 +83,48 @@ u8	**_strsplit(u8 *str, u8 *lim)
 	r[s] = 0;
 	return (r);
 }
+
+/**
+ * _strsplit_special - function
+ * @str: u8 ptr
+ * @lim: u8 ptr
+ *
+ * Return: u8 ptr ptr
+*/
+u8	**_strsplit_special(u8 *str, u8 *lim)
+{
+	u8		**r;
+	vector_t	*v;
+	u64		s;
+	u64		m;
+	u64		x;
+
+	if (str == 0 || lim == 0)
+		return (0);
+	r = (u8 **) malloc(sizeof(u8 *) * (_strsplit_count(str, lim) + 1));
+	if (r == 0)
+		return (0);
+	s = 0;
+	m = 0;
+	v = vector_new(0);
+	for (x = 0; str[x]; x++)
+	{
+		if (_strchr(lim, str[x]))
+		{
+			r[s++] = vector_consume(v);
+			v = vector_new(0);
+			m = 0;
+		}
+		else
+		{
+			vector_write(v, &str[x], 1);
+			m++;
+		}
+	}
+	if (m > 0)
+		r[s++] = vector_consume(v);
+	else
+		vector_free(v);
+	r[s] = 0;
+	return (r);
+}
