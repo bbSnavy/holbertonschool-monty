@@ -10,28 +10,26 @@
 */
 u8	execute_line(u8 **line, u64 index, vector_t *stack)
 {
-	u8 o;
-
 	if (line == 0)
 		return (0);
 	if (len_string_array(line) < 1)
 		return (1);
-	o = execute_opcode(line[0]);
-	if (o == 0)
-	{
-		print_error("L");
-		print_error_n(index + 1);
-		print_error(": unknown instruction <opcode>\n");
-		return (2);
-	}
-	switch (o)
+	switch (execute_opcode(line[0]))
 	{
 		case OP_PUSH:
 			return (execute_push(line, index, stack));
 		case OP_PALL:
 			return (execute_pall(line, index, stack));
+		default:
+		{
+			print_error("L");
+			print_error_n(index + 1);
+			print_error(": unknown instruction ");
+			print_error((char *) line[0]);
+			print_error("\n");
+			return (2);
+		}
 	}
-	return (1);
 }
 
 /**
