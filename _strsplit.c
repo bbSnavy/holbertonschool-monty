@@ -85,6 +85,39 @@ u8	**_strsplit(u8 *str, u8 *lim)
 }
 
 /**
+ * _strsplit_special_count - function
+ * @str: u8 ptr
+ * @lim: u8 ptr
+ *
+ * Return: u64
+*/
+u64	_strsplit_special_count(u8 *str, u8 *lim)
+{
+	u64	r;
+	u64	m;
+	u64	x;
+
+	r = 0;
+	m = 0;
+	if (str == 0)
+		return (0);
+	if (lim == 0)
+		return (0);
+	for (x = 0; str[x]; x++)
+	{
+		if (_strchr(lim, str[x]))
+		{
+			r++;
+			m = 0;
+		}
+		else
+			m++;
+	}
+	r += m > 0;
+	return (r);
+}
+
+/**
  * _strsplit_special - function
  * @str: u8 ptr
  * @lim: u8 ptr
@@ -101,7 +134,7 @@ u8	**_strsplit_special(u8 *str, u8 *lim)
 
 	if (str == 0 || lim == 0)
 		return (0);
-	r = (u8 **) malloc(sizeof(u8 *) * (_strsplit_count(str, lim) + 1));
+	r = (u8 **) malloc(sizeof(u8 *) * (_strsplit_special_count(str, lim) + 1));
 	if (r == 0)
 		return (0);
 	s = 0;
