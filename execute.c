@@ -68,9 +68,9 @@ u8	execute_pall(u8 **line, u64 index, vector_t *stack)
 	if (stack == 0)
 		return (0);
 	l = stack->curr / (sizeof(int) / sizeof(u8));
-	for (x = l; x >= 0; x--)
+	for (x = 0; x < l; x++)
 	{
-		putnbr((i64) * ((int *)(stack->data + (sizeof(int) * x))),
+		putnbr((i64) * ((int *)(stack->data + (sizeof(int) * (l - 1 - x)))),
 			STDOUT_FILENO);
 		print_char('\n');
 	}
