@@ -121,16 +121,8 @@ void	execute_process(char *file, vector_t *stack)
 int	main(int argc, char **argv)
 {
 	vector_t	*stack;
-	int		v;
 
 	stack = vector_new(0);
-	if (stack == 0)
-	{
-		print_error("Error: malloc failed\n");
-		return (EXIT_FAILURE);
-	}
-	v = 0;
-	stack = vector_write(stack, &v, sizeof(v));
 	if (stack == 0)
 	{
 		print_error("Error: malloc failed\n");
