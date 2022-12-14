@@ -20,9 +20,9 @@ u8	execute_line(u8 **line, u64 index, vector_t *stack)
 	if (o == 0)
 	{
 		print_error("L");
-		print_error_n(index);
+		print_error_n(index + 1);
 		print_error(": unknown instruction <opcode>\n");
-		return (0);
+		return (2);
 	}
 	switch (o)
 	{

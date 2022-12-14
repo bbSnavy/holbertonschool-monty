@@ -28,9 +28,9 @@ u8	execute_opcode(u8 *str)
 {
 	if (str == 0)
 		return (0);
-	if (_strcmp(str, (u8 *) "push") == 0)
+	if (_strlen(str) == 4 && _strcmp(str, (u8 *) "push") == 0)
 		return (OP_PUSH);
-	if (_strcmp(str, (u8 *) "pall") == 0)
+	if (_strlen(str) == 4 && _strcmp(str, (u8 *) "pall") == 0)
 		return (OP_PALL);
 	return (0);
 }
