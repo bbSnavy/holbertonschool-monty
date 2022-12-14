@@ -125,6 +125,7 @@ int	main(int argc, char **argv)
 	}
 	if (argc != 2)
 	{
+		vector_free(stack);
 		print_error("USAGE: monty file\n");
 		return (EXIT_FAILURE);
 	}

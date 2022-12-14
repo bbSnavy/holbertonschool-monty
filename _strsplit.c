@@ -127,7 +127,7 @@ u8	**_strsplit_special(u8 *str, u8 *lim)
 	r = (u8 **) malloc(sizeof(u8 *) * (_strsplit_special_count(str, lim) + 1));
 	if (r == 0)
 		return (0);
-	for (x = 0; x < _strsplit_special_count(str, lim) + 1; x++)
+	for (x = 0; x < (_strsplit_special_count(str, lim) + 1); x++)
 		r[x] = 0;
 	s = 0;
 	v = vector_new(0);
