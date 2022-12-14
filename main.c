@@ -69,8 +69,10 @@ u8	execute_runtime(u8 **lines, vector_t *stack)
  * execute_process - function
  * @file: char ptr
  * @stack: vector_t ptr
+ *
+ * Return: int
 */
-void	execute_process(char *file, vector_t *stack)
+int	execute_process(char *file, vector_t *stack)
 {
 	int	f;
 	u8	*s;
@@ -83,7 +85,7 @@ void	execute_process(char *file, vector_t *stack)
 		print_error("Error: Can't open file ");
 		print_error(file);
 		print_error("\n");
-		exit(EXIT_FAILURE);
+		return (EXIT_FAILURE);
 	}
 	s = read_file(f);
 	if (s == 0)
@@ -91,19 +93,20 @@ void	execute_process(char *file, vector_t *stack)
 		print_error("Error: Can't open file ");
 		print_error(file);
 		print_error("\n");
-		exit(EXIT_FAILURE);
+		return (EXIT_FAILURE);
 	}
 	v = _strsplit_special(s, (u8 *) "\n");
 	free(s);
 	if (v == 0)
 	{
 		print_error("Error: malloc failed\n");
-		exit(EXIT_FAILURE);
+		return (EXIT_FAILURE);
 	}
 	c = execute_runtime(v, stack);
 	free_string_array(v);
 	if (c != 0)
-		exit(EXIT_FAILURE);
+		return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
 }
 
 /**
@@ -116,6 +119,7 @@ void	execute_process(char *file, vector_t *stack)
 int	main(int argc, char **argv)
 {
 	vector_t	*stack;
+	int		c;
 
 	stack = vector_new(0);
 	if (stack == 0)
@@ -129,7 +133,7 @@ int	main(int argc, char **argv)
 		print_error("USAGE: monty file\n");
 		return (EXIT_FAILURE);
 	}
-	execute_process(argv[1], stack);
+	c = execute_process(argv[1], stack);
 	vector_free(stack);
-	return (0);
+	return (c);
 }
