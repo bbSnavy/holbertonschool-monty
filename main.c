@@ -50,7 +50,6 @@ u8	execute_runtime(u8 **lines, vector_t *stack)
 		v = _strsplit(lines[x], (u8 *) " \t\r\n");
 		if (v == 0)
 		{
-			free_string_array(lines);
 			print_error("Error: malloc failed\n");
 			return (1);
 		}
@@ -102,8 +101,8 @@ void	execute_process(char *file, vector_t *stack)
 		exit(EXIT_FAILURE);
 	}
 	c = execute_runtime(v, stack);
-	vector_free(stack);
 	free_string_array(v);
+	vector_free(stack);
 	if (c != 0)
 		exit(EXIT_FAILURE);
 }
