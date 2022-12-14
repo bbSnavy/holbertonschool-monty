@@ -102,7 +102,6 @@ void	execute_process(char *file, vector_t *stack)
 	}
 	c = execute_runtime(v, stack);
 	free_string_array(v);
-	vector_free(stack);
 	if (c != 0)
 		exit(EXIT_FAILURE);
 }
@@ -130,5 +129,6 @@ int	main(int argc, char **argv)
 		return (EXIT_FAILURE);
 	}
 	execute_process(argv[1], stack);
+	vector_free(stack);
 	return (0);
 }
