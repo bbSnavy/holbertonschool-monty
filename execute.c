@@ -34,7 +34,12 @@ u8	execute_push(u8 **line, u64 index, vector_t *stack)
 	if (stack == 0)
 		return (0);
 	if (len_string_array(line) < 2)
+	{
+		print_error("L");
+		print_error_n(index + 1);
+		print_error(": usage: push integer\n");
 		return (0);
+	}
 	v = (i32) atoi((char *) line[1]);
 	stack = vector_write(stack, &v, sizeof(v));
 	if (stack == 0)
@@ -42,7 +47,6 @@ u8	execute_push(u8 **line, u64 index, vector_t *stack)
 		print_error("Error: malloc failed\n");
 		return (0);
 	}
-	(void) index;
 	return (1);
 }
 
@@ -64,7 +68,7 @@ u8	execute_pall(u8 **line, u64 index, vector_t *stack)
 	if (stack == 0)
 		return (0);
 	l = stack->curr / (sizeof(int) / sizeof(u8));
-	for (x = 0; x < l; x++)
+	for (x = l; x >= 0; x--)
 	{
 		putnbr((i64) * ((int *)(stack->data + (sizeof(int) * x))),
 			STDOUT_FILENO);

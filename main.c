@@ -39,11 +39,14 @@ u8	execute_line(u8 **line, u64 index, vector_t *stack)
  * @content: u8 ptr
  * @lines: u8 ptr ptr
  * @stack: vector_t ptr
+ *
+ * Return: u8
 */
-void	execute_runtime(u8 *content, u8 **lines, vector_t *stack)
+u8	execute_runtime(u8 *content, u8 **lines, vector_t *stack)
 {
 	u64	x;
 	u8	**v;
+	u8	c;
 
 	for (x = 0; lines[x]; x++)
 	{
@@ -53,15 +56,18 @@ void	execute_runtime(u8 *content, u8 **lines, vector_t *stack)
 			free_string_array(lines);
 			free(content);
 			print_error("Error: malloc failed\n");
-			return;
+			return (1);
 		}
-		if (execute_line(v, x, stack) != 1)
-		{
-			free_string_array(v);
-			break;
-		}
+		c = execute_line(v, x, stack);
 		free_string_array(v);
+		if (c == 0)
+			break;
+		if (c == 1)
+			continue;
+		if (c == 2)
+			return (1);
 	}
+	return (0);
 }
 
 /**
@@ -74,6 +80,7 @@ void	execute_process(char *file, vector_t *stack)
 	int	f;
 	u8	*s;
 	u8	**v;
+	u8	c;
 
 	f = open_file(file, O_RDONLY);
 	if (f == -1)
@@ -98,8 +105,10 @@ void	execute_process(char *file, vector_t *stack)
 		print_error("Error: malloc failed\n");
 		exit(EXIT_FAILURE);
 	}
-	execute_runtime(s, v, stack);
+	c = execute_runtime(s, v, stack);
 	free_string_array(v);
+	if (c != 0)
+		exit(EXIT_FAILURE);
 }
 
 /**
@@ -112,8 +121,16 @@ void	execute_process(char *file, vector_t *stack)
 int	main(int argc, char **argv)
 {
 	vector_t	*stack;
+	int		v;
 
 	stack = vector_new(0);
+	if (stack == 0)
+	{
+		print_error("Error: malloc failed\n");
+		return (EXIT_FAILURE);
+	}
+	v = 0;
+	stack = vector_write(stack, &v, sizeof(v));
 	if (stack == 0)
 	{
 		print_error("Error: malloc failed\n");
