@@ -66,6 +66,7 @@ i32		_strcmp(u8 *, u8 *);
 u8		*_strchr(u8 *, u8);
 u8		**_strsplit(u8 *str, u8 *lim);
 u8		**_strsplit_special(u8 *str, u8 *lim);
+u8		is_number(u8 *str);
 void		free_string_array(u8 **v);
 u64		len_string_array(u8 **v);
 void		putnbr(i64 v, int f);

@@ -1,8 +1,26 @@
 #include "monty.h"
 
 /**
+ * is_number - function
+ * @str: u8 ptr
+ *
+ * Return: u8
+ */
+u8	is_number(u8 *str)
+{
+	u64	x;
+
+	if (str == 0)
+		return (0);
+	for (x = 0; str[x]; x++)
+		if (_strchr((u8 *) "-0123456789", str[x]) == 0)
+			return (0);
+	return (1);
+}
+
+/**
  * execute_opcode - function
- * @str: u8
+ * @str: u8 ptr
  *
  * Return: u8
 */
@@ -34,6 +52,13 @@ u8	execute_push(u8 **line, u64 index, vector_t *stack)
 	if (stack == 0)
 		return (0);
 	if (len_string_array(line) < 2)
+	{
+		print_error("L");
+		print_error_n(index + 1);
+		print_error(": usage: push integer\n");
+		return (2);
+	}
+	if (is_number(line[1]) != 1)
 	{
 		print_error("L");
 		print_error_n(index + 1);
