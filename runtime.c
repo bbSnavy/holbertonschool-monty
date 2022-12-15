@@ -42,6 +42,33 @@ status_t	runtime_line(wrapper_t *w, u8 *s)
 }
 
 /**
+ * runtime_init - function
+ * @v: **vector_t
+ * @f: *int
+ * @p: *[]char
+ *
+ * Return: status_t
+ */
+status_t	runtime_init(vector_t **v, int *f, char **p)
+{
+	*v = vector_new(0);
+	if ((*v) == 0)
+	{
+		_print((u8 *) "Error: malloc failed\n", STDERR_FILENO);
+		return (STATUS_FAILED);
+	}
+	*f = open(*p, O_RDONLY);
+	if ((*f) == -1)
+	{
+		_print((u8 *) "Error: Can't open file ", STDERR_FILENO);
+		_print((u8 *) (*p), STDERR_FILENO);
+		_print((u8 *) "\n", STDERR_FILENO);
+		return (STATUS_FAILED);
+	}
+	return (STATUS_OK);
+}
+
+/**
  * runtime - function
  * @w: *wrapper_t
  * @p: []char
@@ -56,29 +83,13 @@ int	runtime(wrapper_t *w, char *p)
 	i64		l;
 	u8		*s;
 
-	v = vector_new(0);
-	if (v == 0)
-	{
-		_print((u8 *) "Error: malloc failed\n", STDERR_FILENO);
+	if (runtime_init(&v, &f, &p) == STATUS_FAILED)
 		return (EXIT_FAILURE);
-	}
-	f = open(p, O_RDONLY);
-	if (f == -1)
-	{
-		_print((u8 *) "Error: Can't open file ", STDERR_FILENO);
-		_print((u8 *) p, STDERR_FILENO);
-		_print((u8 *) "\n", STDERR_FILENO);
-		return (EXIT_FAILURE);
-	}
 	while (1)
 	{
 		l = read(f, &c, 1);
 		if (l == -1)
-		{
-			close(f);
-			vector_free(v);
-			return (EXIT_FAILURE);
-		}
+			return (runtime_close_v(f, v));
 		if (l < 1)
 		{
 			v = vector_free(v);
@@ -89,39 +100,19 @@ int	runtime(wrapper_t *w, char *p)
 			s = vector_consume(v);
 			v = vector_new(0);
 			if (s == 0 || v == 0)
-			{
-				close(f);
-				vector_free(v);
-				_print((u8 *) "Error: malloc failed\n",
-				       STDERR_FILENO);
-				return (EXIT_FAILURE);
-			}
-			if (_strlen(s) > 0)
-				if (runtime_line(w, s) == STATUS_FAILED)
-				{
-					free(s);
-					vector_free(v);
-					close(f);
-					return (EXIT_FAILURE);
-				}
+				return (runtime_close_v(runtime_error_f(f, "Error: malloc failed\n"), v));
+			if ((_strlen(s) > 0) && (runtime_line(w, s) == STATUS_FAILED))
+				return (runtime_close_s_v(f, s, v));
 			free(s);
 			w->l = w->l + 1;
 		}
 		else if (vector_write(v, &c, 1) == 0)
-		{
-			close(f);
-			_print((u8 *) "Error: malloc failed\n", STDERR_FILENO);
-			return (EXIT_FAILURE);
-		}
+			return (runtime_close(runtime_error_f(f, "Error: malloc failed\\n")));
 	}
 	s = vector_consume(v);
 	if (_strlen(s) > 0)
 		if (runtime_line(w, s) == STATUS_FAILED)
-		{
-			free(s);
-			close(f);
-			return (EXIT_FAILURE);
-		}
+			return (runtime_close_s(f, s));
 	free(s);
 	return (EXIT_SUCCESS);
 }
