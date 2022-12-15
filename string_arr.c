@@ -3,16 +3,19 @@
 /**
  * free_string_array - function
  * @v: u8 ptr ptr
+ *
+ * Return: void ptr
 */
-void	free_string_array(u8 **v)
+void	*free_string_array(u8 **v)
 {
 	u64	x;
 
 	if (v == 0)
-		return;
+		return (0);
 	for (x = 0; v[x]; x++)
 		free(v[x]);
 	free(v);
+	return (0);
 }
 
 /**

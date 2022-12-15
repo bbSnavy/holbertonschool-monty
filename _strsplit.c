@@ -132,26 +132,25 @@ u8	**_strsplit_special(u8 *str, u8 *lim)
 	s = 0;
 	v = vector_new(0);
 	if (v == 0)
-	{
-		free_string_array(r);
-		return (0);
-	}
+		return ((u8 **) free_string_array(r));
 	for (x = 0; str[x]; x++)
 	{
 		if (_strchr(lim, str[x]))
 		{
 			r[s++] = vector_consume(v);
+			if (r[s - 1] == 0)
+				return ((u8 **) free_string_array(r));
 			v = vector_new(0);
 			if (v == 0)
-			{
-				free_string_array(r);
-				return (0);
-			}
+				return ((u8 **) free_string_array(r));
 		}
 		else
-			vector_write(v, &str[x], 1);
+			if (vector_write(v, &str[x], 1) == 0)
+				return ((u8 **) free_string_array(r));
 	}
 	r[s++] = vector_consume(v);
+	if (r[s - 1] == 0)
+		return ((u8 **) free_string_array(r));
 	r[s] = 0;
 	return (r);
 }
