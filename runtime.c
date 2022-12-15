@@ -39,6 +39,8 @@ status_t	runtime_line(wrapper_t *w, u8 *s)
 		r = runtime_execute_pall(w, v);
 	else if (o == OP_PINT)
 		r = runtime_execute_pint(w, v);
+	else if (o == OP_POP)
+		r = runtime_execute_pop(w, v);
 	free_string_array(v);
 	return (r);
 }

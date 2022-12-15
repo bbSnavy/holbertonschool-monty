@@ -97,6 +97,7 @@ opcode_t	runtime_opcode(u8 *str);
 status_t	runtime_execute_push(wrapper_t *, u8 **v);
 status_t	runtime_execute_pall(wrapper_t *, u8 **v);
 status_t	runtime_execute_pint(wrapper_t *, u8 **v);
+status_t	runtime_execute_pop(wrapper_t *, u8 **v);
 int		runtime_close(int f);
 int		runtime_close_s(int f, u8 *s);
 int		runtime_close_v(int f, vector_t *v);
