@@ -1,12 +1,5 @@
 #include "monty.h"
 
-status_t	runtime_execute_pall(wrapper_t *w, u8 **v)
-{
-	if (w == 0 || w->v == 0 || v == 0)
-		return (STATUS_FAILED);
-	return (wrapper_pall(w));
-}
-
 status_t	runtime_line(wrapper_t *w, u8 *s)
 {
 	status_t 	r;

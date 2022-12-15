@@ -90,6 +90,7 @@ status_t	wrapper_push(wrapper_t *, int v);
 status_t	wrapper_pall(wrapper_t *);
 opcode_t	runtime_opcode(u8 *str);
 status_t	runtime_execute_push(wrapper_t *, u8 **v);
+status_t	runtime_execute_pall(wrapper_t *, u8 **v);
 u64		_strlen(u8 *);
 i32		_strcmp(u8 *, u8 *);
 u8		*_strchr(u8 *, u8);
