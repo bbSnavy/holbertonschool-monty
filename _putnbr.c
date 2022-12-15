@@ -1,11 +1,11 @@
 #include "monty.h"
 
 /**
- * putnbr - function
+ * _putnbr - function
  * @v: i64
  * @f: int
 */
-void	putnbr(i64 v, int f)
+void	_putnbr(i64 v, int f)
 {
 	char	c;
 
@@ -13,7 +13,7 @@ void	putnbr(i64 v, int f)
 	{
 		c = '-';
 		write(f, &c, 1);
-		putnbr(-v, f);
+		_putnbr(-v, f);
 	}
 	else if (v < 10)
 	{
@@ -22,7 +22,7 @@ void	putnbr(i64 v, int f)
 	}
 	else
 	{
-		putnbr(v / 10, f);
-		putnbr(v % 10, f);
+		_putnbr(v / 10, f);
+		_putnbr(v % 10, f);
 	}
 }

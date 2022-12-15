@@ -56,36 +56,47 @@ typedef struct	vector_s
 	u64	curr;
 }	vector_t;
 
+/**
+ * struct vector_s - struct
+ * @v: *vector_t
+ * @l: u64
+*/
+typedef struct	wrapper_s
+{
+	vector_t	*v;
+	u64		l;
+}	wrapper_t;
+
+typedef int	status_t;
+# define STATUS_OK      (1)
+# define STATUS_WARNING (2)
+# define STATUS_FAILED  (3)
+
 vector_t	*vector_new(vector_t *);
 vector_t	*vector_free(vector_t *);
 vector_t	*vector_write(vector_t *, void *src, u64 len);
 vector_t	*vector_read(vector_t *, void *dst, u64 size);
+wrapper_t 	*wrapper_new(wrapper_t *);
+wrapper_t	*wrapper_free(wrapper_t *);
+status_t	wrapper_push(wrapper_t *, int v);
+status_t	wrapper_pall(wrapper_t *);
 u8		*vector_consume(vector_t *);
 u64		_strlen(u8 *);
 i32		_strcmp(u8 *, u8 *);
 u8		*_strchr(u8 *, u8);
 u8		**_strsplit(u8 *str, u8 *lim);
-u8		**_strsplit_special(u8 *str, u8 *lim);
 u8		is_number(u8 *str);
 void		*free_string_array(u8 **v);
 u64		len_string_array(u8 **v);
 u8		is_number(u8 *str);
-void		putnbr(i64 v, int f);
-void		print_char(char);
-void		print_string(char *);
-void		print_error(char *);
-void		print_error_n(u64 v);
-int		open_file(char *path, int mode);
-u8		*read_file(int f);
-u8		execute_opcode(u8 *);
-u8		execute_push(u8 **line, u64 index, vector_t *stack);
-u8		execute_pall(u8 **line, u64 index, vector_t *stack);
-u8		execute_pint(u8 **line, u64 index, vector_t *stack);
-u8		execute_pop(u8 **line, u64 index, vector_t *stack);
-u8		execute_swap(u8 **line, u64 index, vector_t *stack);
+void		_putnbr(i64 v, int f);
+void		_print(u8 *s, int f);
+void		_print_line(u64 l, u8 *s, int f);
 int		main(int argc, char **argv);
 
 # define BUFFER_SIZE (1024)
+
+typedef int	opcode_t;
 # define OP_PUSH (1)
 # define OP_PALL (2)
 # define OP_PINT (3)

@@ -1,146 +1,167 @@
 #include "monty.h"
 
-/**
- * execute_line - function
- * @line: u8 ptr ptr
- * @index: u64
- * @stack: vector_t ptr
- *
- * Return: u8
-*/
-u8	execute_line(u8 **line, u64 index, vector_t *stack)
+opcode_t	runtime_opcode(u8 *str)
 {
-	if (line == 0)
+	if (str == 0)
 		return (0);
-	if (len_string_array(line) < 1)
-		return (1);
-	switch (execute_opcode(line[0]))
-	{
-		case OP_PUSH:
-			return (execute_push(line, index, stack));
-		case OP_PALL:
-			return (execute_pall(line, index, stack));
-		case OP_PINT:
-			return (execute_pint(line, index, stack));
-		case OP_POP:
-			return (execute_pop(line, index, stack));
-		case OP_SWAP:
-			return (execute_swap(line, index, stack));
-		default:
-		{
-			print_error("L");
-			print_error_n(index + 1);
-			print_error(": unknown instruction ");
-			print_error((char *) line[0]);
-			print_error("\n");
-			return (2);
-		}
-	}
-}
-
-/**
- * execute_runtime - function
- * @lines: u8 ptr ptr
- * @stack: vector_t ptr
- *
- * Return: u8
-*/
-u8	execute_runtime(u8 **lines, vector_t *stack)
-{
-	u64	x;
-	u8	**v;
-	u8	c;
-
-	for (x = 0; lines[x]; x++)
-	{
-		v = _strsplit(lines[x], (u8 *) " \t\r\n");
-		if (v == 0)
-		{
-			print_error("Error: malloc failed\n");
-			return (1);
-		}
-		c = execute_line(v, x, stack);
-		free_string_array(v);
-		if (c == 0)
-			break;
-		if (c == 1)
-			continue;
-		if (c == 2)
-			return (1);
-	}
+	if (_strlen(str) == 4 && _strcmp(str, (u8 *) "push") == 0)
+		return (OP_PUSH);
+	if (_strlen(str) == 4 && _strcmp(str, (u8 *) "pall") == 0)
+		return (OP_PALL);
+	if (_strlen(str) == 4 && _strcmp(str, (u8 *) "pint") == 0)
+		return (OP_PINT);
+	if (_strlen(str) == 3 && _strcmp(str, (u8 *) "pop") == 0)
+		return (OP_POP);
+	if (_strlen(str) == 4 && _strcmp(str, (u8 *) "swap") == 0)
+		return (OP_SWAP);
 	return (0);
 }
 
-/**
- * execute_process - function
- * @file: char ptr
- * @stack: vector_t ptr
- *
- * Return: int
-*/
-int	execute_process(char *file, vector_t *stack)
+status_t	runtime_execute_push(wrapper_t *w, u8 **v)
 {
-	int	f;
-	u8	*s;
-	u8	**v;
-	u8	c;
+	if (w == 0 || w->v == 0 || v == 0)
+		return (STATUS_FAILED);
+	if ((len_string_array(v) < 2) || (is_number(v[1]) != 1))
+	{
+		_print_line(w->l, (u8 *) "usage: push integer\n",
+			    STDERR_FILENO);
+		return (STATUS_FAILED);
+	}
+	return (wrapper_push(w, atoi((char *) v[1])));
+}
 
-	f = open_file(file, O_RDONLY);
-	if (f == -1)
-	{
-		print_error("Error: Can't open file ");
-		print_error(file);
-		print_error("\n");
-		return (EXIT_FAILURE);
-	}
-	s = read_file(f);
-	close(f);
-	if (s == 0)
-	{
-		print_error("Error: Can't open file ");
-		print_error(file);
-		print_error("\n");
-		return (EXIT_FAILURE);
-	}
-	v = _strsplit_special(s, (u8 *) "\n");
-	free(s);
+status_t	runtime_execute_pall(wrapper_t *w, u8 **v)
+{
+	if (w == 0 || w->v == 0 || v == 0)
+		return (STATUS_FAILED);
+	return (wrapper_pall(w));
+}
+
+status_t	runtime_line(wrapper_t *w, u8 *s)
+{
+	status_t 	r;
+	u8		**v;
+	opcode_t	o;
+
+	v = _strsplit(s, (u8 *) " \t\r");
 	if (v == 0)
 	{
-		print_error("Error: malloc failed\n");
+		_print((u8 *) "Error: malloc failed\n", STDERR_FILENO);
+		return (STATUS_FAILED);
+	}
+	r = STATUS_FAILED;
+	o = runtime_opcode(v[0]);
+	if (o == 0)
+	{
+		_print_line(w->l, (u8 *) "unknown instruction ",
+			    STDERR_FILENO);
+		_print(s, STDERR_FILENO);
+		_print((u8 *) "\n", STDERR_FILENO);
+		r = STATUS_FAILED;
+	}
+	else if (o == OP_PUSH)
+		r = runtime_execute_push(w, v);
+	else if (o == OP_PALL)
+		r = runtime_execute_pall(w, v);
+	free_string_array(v);
+	return (r);
+}
+
+int	runtime(wrapper_t *w, char *p)
+{
+	vector_t	*v;
+	int		f;
+	char 		c;
+	i64		l;
+	u8		*s;
+
+	v = vector_new(0);
+	if (v == 0)
+	{
+		_print((u8 *) "Error: malloc failed\n", STDERR_FILENO);
 		return (EXIT_FAILURE);
 	}
-	c = execute_runtime(v, stack);
-	free_string_array(v);
-	if (c != 0)
+	f = open(p, O_RDONLY);
+	if (f == -1)
+	{
+		_print((u8 *) "Error: Can't open file ", STDERR_FILENO);
 		return (EXIT_FAILURE);
+	}
+	while (1)
+	{
+		l = read(f, &c, 1);
+		if (l == -1)
+		{
+			close(f);
+			vector_free(v);
+			return (EXIT_FAILURE);
+		}
+		if (l < 1)
+		{
+			vector_free(v);
+			break;
+		}
+		if (_strchr((u8 *) "\n", c) != 0)
+		{
+			s = vector_consume(v);
+			v = vector_new(0);
+			if (s == 0 || v == 0)
+			{
+				close(f);
+				vector_free(v);
+				_print((u8 *) "Error: malloc failed\n",
+				       STDERR_FILENO);
+				return (EXIT_FAILURE);
+			}
+			if (_strlen(s) > 0)
+				if (runtime_line(w, s) == STATUS_FAILED)
+				{
+					free(s);
+					vector_free(v);
+					close(f);
+					return (EXIT_FAILURE);
+				}
+			free(s);
+			w->l = w->l + 1;
+		}
+		else if (vector_write(v, &c, 1) == 0)
+		{
+			close(f);
+			_print((u8 *) "Error: malloc failed\n", STDERR_FILENO);
+			return (EXIT_FAILURE);
+		}
+	}
+	s = vector_consume(v);
+	if (_strlen(s) > 0)
+		if (runtime_line(w, s) == STATUS_FAILED)
+		{
+			free(s);
+			close(f);
+			return (EXIT_FAILURE);
+		}
+	free(s);
 	return (EXIT_SUCCESS);
 }
 
-/**
- * main - function
- * @argc: int
- * @argv: char ptr ptr
- *
- * Return: int
-*/
 int	main(int argc, char **argv)
 {
-	vector_t	*stack;
-	int		c;
+	int		r;
+	wrapper_t	*w;
 
-	stack = vector_new(0);
-	if (stack == 0)
+	r = EXIT_SUCCESS;
+	w = wrapper_new(0);
+	if (w == 0)
 	{
-		print_error("Error: malloc failed\n");
+		_print((u8 *) "Error: malloc failed\n", STDERR_FILENO);
 		return (EXIT_FAILURE);
 	}
 	if (argc != 2)
 	{
-		vector_free(stack);
-		print_error("USAGE: monty file\n");
+		wrapper_free(w);
+		_print((u8 *) "USAGE: monty file\n", STDERR_FILENO);
 		return (EXIT_FAILURE);
 	}
-	c = execute_process(argv[1], stack);
-	vector_free(stack);
-	return (c);
+	r = runtime(w, argv[1]);
+	wrapper_free(w);
+	return (r);
 }
