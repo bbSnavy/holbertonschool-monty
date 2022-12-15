@@ -19,6 +19,11 @@ status_t	runtime_line(wrapper_t *w, u8 *s)
 		_print((u8 *) "Error: malloc failed\n", STDERR_FILENO);
 		return (STATUS_FAILED);
 	}
+	if (len_string_array(v) < 1)
+	{
+		free_string_array(v);
+		return (STATUS_OK);
+	}
 	r = STATUS_FAILED;
 	o = runtime_opcode(v[0]);
 	if (o == 0)
