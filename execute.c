@@ -126,7 +126,7 @@ u8	execute_pint(u8 **line, u64 index, vector_t *stack)
 		print_error(": can't pint, stack empty\n");
 		return (2);
 	}
-	putnbr((i64) *((int *)(&stack->data[stack->curr - sizeof(int)])),
+	putnbr((i64) * ((int *)(&stack->data[stack->curr - sizeof(int)])),
 	       STDOUT_FILENO);
 	print_string("\n");
 	(void) index;

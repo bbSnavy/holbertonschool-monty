@@ -90,6 +90,7 @@ int	execute_process(char *file, vector_t *stack)
 		return (EXIT_FAILURE);
 	}
 	s = read_file(f);
+	close(f);
 	if (s == 0)
 	{
 		print_error("Error: Can't open file ");
