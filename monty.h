@@ -78,6 +78,8 @@ typedef int	opcode_t;
 # define OP_PINT (3)
 # define OP_POP  (4)
 # define OP_SWAP (5)
+# define OP_ADD  (6)
+# define OP_NOP  (7)
 
 vector_t	*vector_new(vector_t *);
 vector_t	*vector_free(vector_t *);
@@ -91,6 +93,7 @@ status_t	wrapper_pall(wrapper_t *);
 status_t	wrapper_pint(wrapper_t *);
 status_t	wrapper_pop(wrapper_t *);
 status_t	wrapper_swap(wrapper_t *);
+status_t	wrapper_add(wrapper_t *);
 int		runtime(wrapper_t *, char *p);
 status_t	runtime_line(wrapper_t *, u8 *s);
 opcode_t	runtime_opcode(u8 *str);
@@ -98,7 +101,9 @@ status_t	runtime_execute_push(wrapper_t *, u8 **v);
 status_t	runtime_execute_pall(wrapper_t *, u8 **v);
 status_t	runtime_execute_pint(wrapper_t *, u8 **v);
 status_t	runtime_execute_pop(wrapper_t *, u8 **v);
-status_t 	runtime_execute_swap(wrapper_t *, u8 **v);
+status_t	runtime_execute_swap(wrapper_t *, u8 **v);
+status_t	runtime_execute_add(wrapper_t *, u8 **v);
+status_t	runtime_execute_nop(wrapper_t *, u8 **v);
 int		runtime_close(int f);
 int		runtime_close_s(int f, u8 *s);
 int		runtime_close_v(int f, vector_t *v);

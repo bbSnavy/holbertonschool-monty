@@ -20,5 +20,9 @@ opcode_t	runtime_opcode(u8 *str)
 		return (OP_POP);
 	if (_strlen(str) == 4 && _strcmp(str, (u8 *) "swap") == 0)
 		return (OP_SWAP);
+	if (_strlen(str) == 3 && _strcmp(str, (u8 *) "add") == 0)
+		return (OP_ADD);
+	if (_strlen(str) == 3 && _strcmp(str, (u8 *) "nop") == 0)
+		return (OP_NOP);
 	return (0);
 }

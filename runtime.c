@@ -43,6 +43,10 @@ status_t	runtime_line(wrapper_t *w, u8 *s)
 		r = runtime_execute_pop(w, v);
 	else if (o == OP_SWAP)
 		r = runtime_execute_swap(w, v);
+	else if (o == OP_ADD)
+		r = runtime_execute_add(w, v);
+	else if (o == OP_NOP)
+		r = runtime_execute_nop(w, v);
 	free_string_array(v);
 	return (r);
 }
