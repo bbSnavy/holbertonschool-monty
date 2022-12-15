@@ -38,9 +38,8 @@ status_t	runtime_line(wrapper_t *w, u8 *s)
 	{
 		_print_line(w->l, (u8 *) "unknown instruction ",
 			    STDERR_FILENO);
-		_print(s, STDERR_FILENO);
+		_print(v[0], STDERR_FILENO);
 		_print((u8 *) "\n", STDERR_FILENO);
-		r = STATUS_FAILED;
 	}
 	else if (o == OP_PUSH)
 		r = runtime_execute_push(w, v);
