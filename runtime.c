@@ -41,6 +41,8 @@ status_t	runtime_line(wrapper_t *w, u8 *s)
 		r = runtime_execute_pint(w, v);
 	else if (o == OP_POP)
 		r = runtime_execute_pop(w, v);
+	else if (o == OP_SWAP)
+		r = runtime_execute_swap(w, v);
 	free_string_array(v);
 	return (r);
 }
@@ -64,6 +66,7 @@ status_t	runtime_init(vector_t **v, int *f, char **p)
 	*f = open(*p, O_RDONLY);
 	if ((*f) == -1)
 	{
+		*v = vector_free(*v);
 		_print((u8 *) "Error: Can't open file ", STDERR_FILENO);
 		_print((u8 *) (*p), STDERR_FILENO);
 		_print((u8 *) "\n", STDERR_FILENO);
