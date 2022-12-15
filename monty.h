@@ -82,6 +82,7 @@ u8		execute_push(u8 **line, u64 index, vector_t *stack);
 u8		execute_pall(u8 **line, u64 index, vector_t *stack);
 u8		execute_pint(u8 **line, u64 index, vector_t *stack);
 u8		execute_pop(u8 **line, u64 index, vector_t *stack);
+u8		execute_swap(u8 **line, u64 index, vector_t *stack);
 int		main(int argc, char **argv);
 
 # define BUFFER_SIZE (1024)
@@ -89,5 +90,6 @@ int		main(int argc, char **argv);
 # define OP_PALL (2)
 # define OP_PINT (3)
 # define OP_POP  (4)
+# define OP_SWAP (5)
 
 #endif

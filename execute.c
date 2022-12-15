@@ -1,27 +1,6 @@
 #include "monty.h"
 
 /**
- * execute_opcode - function
- * @str: u8 ptr
- *
- * Return: u8
-*/
-u8	execute_opcode(u8 *str)
-{
-	if (str == 0)
-		return (0);
-	if (_strlen(str) == 4 && _strcmp(str, (u8 *) "push") == 0)
-		return (OP_PUSH);
-	if (_strlen(str) == 4 && _strcmp(str, (u8 *) "pall") == 0)
-		return (OP_PALL);
-	if (_strlen(str) == 4 && _strcmp(str, (u8 *) "pint") == 0)
-		return (OP_PINT);
-	if (_strlen(str) == 3 && _strcmp(str, (u8 *) "pop") == 0)
-		return (OP_POP);
-	return (0);
-}
-
-/**
  * execute_push - function
  * @line: u8 ptr ptr
  * @index: u64
@@ -153,5 +132,40 @@ u8	execute_pop(u8 **line, u64 index, vector_t *stack)
 	free(stack->data);
 	stack->data = v;
 	stack->curr = stack->curr - p;
+	return (1);
+}
+
+/**
+ * execute_swap - function
+ * @line: u8 ptr ptr
+ * @index: u64
+ * @stack: vector_t ptr
+ *
+ * Return: u8
+*/
+u8	execute_swap(u8 **line, u64 index, vector_t *stack)
+{
+	u64	p;
+	int	v;
+	int	*a;
+	int	*b;
+
+	if (line == 0)
+		return (0);
+	if (stack == 0)
+		return (0);
+	p = sizeof(int) / sizeof(u8);
+	if (stack->curr < (p * 2))
+	{
+		print_error("L");
+		print_error_n(index + 1);
+		print_error(": can't swap, stack too short\n");
+		return (2);
+	}
+	a = (int *) (&stack->data[stack->curr - (p * 2)]);
+	b = (int *) (&stack->data[stack->curr - (p * 1)]);
+	v = *a;
+	*a = *b;
+	*b = v;
 	return (1);
 }
