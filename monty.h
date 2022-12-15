@@ -57,7 +57,7 @@ typedef struct	vector_s
 }	vector_t;
 
 /**
- * struct vector_s - struct
+ * struct wrapper_s - struct
  * @v: *vector_t
  * @l: u64
 */
@@ -84,10 +84,12 @@ vector_t	*vector_free(vector_t *);
 vector_t	*vector_write(vector_t *, void *src, u64 len);
 vector_t	*vector_read(vector_t *, void *dst, u64 size);
 u8		*vector_consume(vector_t *);
-wrapper_t 	*wrapper_new(wrapper_t *);
+wrapper_t	*wrapper_new(wrapper_t *);
 wrapper_t	*wrapper_free(wrapper_t *);
 status_t	wrapper_push(wrapper_t *, int v);
 status_t	wrapper_pall(wrapper_t *);
+int		runtime(wrapper_t *, char *p);
+status_t	runtime_line(wrapper_t *, u8 *s);
 opcode_t	runtime_opcode(u8 *str);
 status_t	runtime_execute_push(wrapper_t *, u8 **v);
 status_t	runtime_execute_pall(wrapper_t *, u8 **v);

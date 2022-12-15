@@ -1,7 +1,7 @@
 #include "monty.h"
 
 /**
- * runtime_execute_push
+ * runtime_execute_push - function
  * @w: *wrapper_t
  * @v: [][]u8
  *

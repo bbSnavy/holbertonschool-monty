@@ -1,5 +1,12 @@
 #include "monty.h"
 
+/**
+ * _strcmp - function
+ * @a: []u8
+ * @b: []u8
+ *
+ * Return: i32
+ */
 i32	_strcmp(u8 *a, u8 *b)
 {
 	u64	x;

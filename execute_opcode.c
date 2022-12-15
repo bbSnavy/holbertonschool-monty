@@ -1,5 +1,11 @@
 #include "monty.h"
 
+/**
+ * runtime_opcode - function
+ * @str: []u8
+ *
+ * Return: opcode_t
+ */
 opcode_t	runtime_opcode(u8 *str)
 {
 	if (str == 0)

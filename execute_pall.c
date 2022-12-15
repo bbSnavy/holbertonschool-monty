@@ -1,7 +1,7 @@
 #include "monty.h"
 
 /**
- * runtime_execute_pall
+ * runtime_execute_pall - function
  * @w: *wrapper_t
  * @v: [][]u8
  *
