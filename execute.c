@@ -150,9 +150,6 @@ u8	execute_pop(u8 **line, u64 index, vector_t *stack)
 	}
 	for (x = 0; x < (stack->curr - p); x++)
 		v[x] = stack->data[x];
-	putnbr((i64) * ((int *)(&stack->data[stack->curr - p])),
-		STDOUT_FILENO);
-	print_string("\n");
 	free(stack->data);
 	stack->data = v;
 	stack->curr = stack->curr - p;
