@@ -69,6 +69,7 @@ u8		**_strsplit_special(u8 *str, u8 *lim);
 u8		is_number(u8 *str);
 void		*free_string_array(u8 **v);
 u64		len_string_array(u8 **v);
+u8		is_number(u8 *str);
 void		putnbr(i64 v, int f);
 void		print_char(char);
 void		print_string(char *);
@@ -80,11 +81,13 @@ u8		execute_opcode(u8 *);
 u8		execute_push(u8 **line, u64 index, vector_t *stack);
 u8		execute_pall(u8 **line, u64 index, vector_t *stack);
 u8		execute_pint(u8 **line, u64 index, vector_t *stack);
+u8		execute_pop(u8 **line, u64 index, vector_t *stack);
 int		main(int argc, char **argv);
 
 # define BUFFER_SIZE (1024)
 # define OP_PUSH (1)
 # define OP_PALL (2)
 # define OP_PINT (3)
+# define OP_POP  (4)
 
 #endif

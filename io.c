@@ -73,7 +73,11 @@ u8	*read_file(int f)
 			vector_free(v);
 			return (0);
 		}
-		vector_write(v, b, l);
+		if (vector_write(v, b, l) == 0)
+		{
+			free(b);
+			return (0);
+		}
 		if (l < BUFFER_SIZE)
 			break;
 	}

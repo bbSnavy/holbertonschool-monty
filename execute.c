@@ -1,24 +1,6 @@
 #include "monty.h"
 
 /**
- * is_number - function
- * @str: u8 ptr
- *
- * Return: u8
- */
-u8	is_number(u8 *str)
-{
-	u64	x;
-
-	if (str == 0)
-		return (0);
-	for (x = 0; str[x]; x++)
-		if (_strchr((u8 *) "-0123456789", str[x]) == 0)
-			return (0);
-	return (1);
-}
-
-/**
  * execute_opcode - function
  * @str: u8 ptr
  *
@@ -34,6 +16,8 @@ u8	execute_opcode(u8 *str)
 		return (OP_PALL);
 	if (_strlen(str) == 4 && _strcmp(str, (u8 *) "pint") == 0)
 		return (OP_PINT);
+	if (_strlen(str) == 3 && _strcmp(str, (u8 *) "pop") == 0)
+		return (OP_POP);
 	return (0);
 }
 
@@ -68,7 +52,7 @@ u8	execute_push(u8 **line, u64 index, vector_t *stack)
 		return (2);
 	}
 	v = (i32) atoi((char *) line[1]);
-	stack = vector_write(stack, &v, sizeof(v));
+	stack = vector_write(stack, &v, (sizeof(v) / sizeof(u8)));
 	if (stack == 0)
 	{
 		print_error("Error: malloc failed\n");
@@ -129,6 +113,48 @@ u8	execute_pint(u8 **line, u64 index, vector_t *stack)
 	putnbr((i64) * ((int *)(&stack->data[stack->curr - sizeof(int)])),
 	       STDOUT_FILENO);
 	print_string("\n");
-	(void) index;
+	return (1);
+}
+
+/**
+ * execute_pop - function
+ * @line: u8 ptr ptr
+ * @index: u64
+ * @stack: vector_t ptr
+ *
+ * Return: u8
+*/
+u8	execute_pop(u8 **line, u64 index, vector_t *stack)
+{
+	u64	p;
+	u8	*v;
+	u64	x;
+
+	if (line == 0)
+		return (0);
+	if (stack == 0)
+		return (0);
+	if (stack->curr == 0)
+	{
+		print_error("L");
+		print_error_n(index + 1);
+		print_error(": can't pop an empty stack\n");
+		return (2);
+	}
+	p = sizeof(int) / sizeof(u8);
+	v = (u8 *) malloc(stack->curr - p);
+	if (v == 0)
+	{
+		print_error("Error: malloc failed\n");
+		return (2);
+	}
+	for (x = 0; x < (stack->curr - p); x++)
+		v[x] = stack->data[x];
+	putnbr((i64) * ((int *)(&stack->data[stack->curr - p])),
+		STDOUT_FILENO);
+	print_string("\n");
+	free(stack->data);
+	stack->data = v;
+	stack->curr = stack->curr - p;
 	return (1);
 }
