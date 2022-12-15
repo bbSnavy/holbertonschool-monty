@@ -72,15 +72,23 @@ typedef int	status_t;
 # define STATUS_WARNING (2)
 # define STATUS_FAILED  (3)
 
+typedef int	opcode_t;
+# define OP_PUSH (1)
+# define OP_PALL (2)
+# define OP_PINT (3)
+# define OP_POP  (4)
+# define OP_SWAP (5)
+
 vector_t	*vector_new(vector_t *);
 vector_t	*vector_free(vector_t *);
 vector_t	*vector_write(vector_t *, void *src, u64 len);
 vector_t	*vector_read(vector_t *, void *dst, u64 size);
+u8		*vector_consume(vector_t *);
 wrapper_t 	*wrapper_new(wrapper_t *);
 wrapper_t	*wrapper_free(wrapper_t *);
 status_t	wrapper_push(wrapper_t *, int v);
 status_t	wrapper_pall(wrapper_t *);
-u8		*vector_consume(vector_t *);
+opcode_t	runtime_opcode(u8 *str);
 u64		_strlen(u8 *);
 i32		_strcmp(u8 *, u8 *);
 u8		*_strchr(u8 *, u8);
@@ -93,14 +101,5 @@ void		_putnbr(i64 v, int f);
 void		_print(u8 *s, int f);
 void		_print_line(u64 l, u8 *s, int f);
 int		main(int argc, char **argv);
-
-# define BUFFER_SIZE (1024)
-
-typedef int	opcode_t;
-# define OP_PUSH (1)
-# define OP_PALL (2)
-# define OP_PINT (3)
-# define OP_POP  (4)
-# define OP_SWAP (5)
 
 #endif

@@ -1,22 +1,5 @@
 #include "monty.h"
 
-opcode_t	runtime_opcode(u8 *str)
-{
-	if (str == 0)
-		return (0);
-	if (_strlen(str) == 4 && _strcmp(str, (u8 *) "push") == 0)
-		return (OP_PUSH);
-	if (_strlen(str) == 4 && _strcmp(str, (u8 *) "pall") == 0)
-		return (OP_PALL);
-	if (_strlen(str) == 4 && _strcmp(str, (u8 *) "pint") == 0)
-		return (OP_PINT);
-	if (_strlen(str) == 3 && _strcmp(str, (u8 *) "pop") == 0)
-		return (OP_POP);
-	if (_strlen(str) == 4 && _strcmp(str, (u8 *) "swap") == 0)
-		return (OP_SWAP);
-	return (0);
-}
-
 status_t	runtime_execute_push(wrapper_t *w, u8 **v)
 {
 	if (w == 0 || w->v == 0 || v == 0)
@@ -85,6 +68,8 @@ int	runtime(wrapper_t *w, char *p)
 	if (f == -1)
 	{
 		_print((u8 *) "Error: Can't open file ", STDERR_FILENO);
+		_print((u8 *) p, STDERR_FILENO);
+		_print((u8 *) "\n", STDERR_FILENO);
 		return (EXIT_FAILURE);
 	}
 	while (1)
@@ -98,7 +83,7 @@ int	runtime(wrapper_t *w, char *p)
 		}
 		if (l < 1)
 		{
-			vector_free(v);
+			v = vector_free(v);
 			break;
 		}
 		if (_strchr((u8 *) "\n", c) != 0)
